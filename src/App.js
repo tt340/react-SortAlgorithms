@@ -5,12 +5,13 @@ import "./App.css";
 function App() {
   const [data, setData] = useState([]);
   const myref = useRef(null);
+  const [dataCount, setDataCount] = useState(100);
 
   const WAITING_TIME = 10; // in ms
 
   useEffect(() => {
-    generateRandomArray(8, 100);
-  }, []);
+    generateRandomArray(dataCount, 100);
+  }, [dataCount]);
 
   const generateRandomArray = (count, max) => {
     var randomData = [];
@@ -24,7 +25,7 @@ function App() {
     if (myref.current) {
       const displayWidth = myref.current.offsetWidth;
       const displayHeight = myref.current.offsetHeight;
-      const itemWidth = displayWidth / data.length;
+      const itemWidth = Math.floor(displayWidth / data.length);
 
       return data.map((item) => {
         const currentHeight = item * 0.01 * displayHeight;
@@ -106,12 +107,10 @@ function App() {
     const left = array.slice(0, middle);
     const right = array.slice(middle);
    // await updateDataAndWait([...left, ...right]);
-    console.log(typeof left);
     return merge(mergeSort(left), mergeSort(right));
   };
 
   const updateDataAndWait = async (data) => {
-    console.log(data);
     setData([...data]);
     await new Promise((r) => setTimeout(r, WAITING_TIME));
   };
@@ -185,10 +184,13 @@ function App() {
         </button>
         <button
           onClick={() => {
-            generateRandomArray(200, 100);
+            generateRandomArray(dataCount, 100);
           }}>
           Reload Data
         </button>
+      </div>
+      <div>
+        <input type="number" title="Count of data" onChange={(e) =>{setDataCount(e.target.value)}} value={dataCount}/>
       </div>
     </div>
   );
