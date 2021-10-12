@@ -36,7 +36,6 @@ function App() {
               width: `${itemWidth}px`,
               backgroundColor: "blue",
               display: "inline-block",
-              border: "2px solid white",
               boxSizing: "border-box",
             }}></div>
         );
