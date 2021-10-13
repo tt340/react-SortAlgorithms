@@ -6,6 +6,7 @@ function App() {
   const [data, setData] = useState([]);
   const myref = useRef(null);
   const [dataCount, setDataCount] = useState(100);
+  const [withTimeout, setWithTimeout] = useState(true);
 
   const WAITING_TIME = 10; // in ms
 
@@ -51,7 +52,7 @@ function App() {
     for (let i = 0; i < array.length - 1; i++) {
       let swapped = false;
 
-      for (let j = 0; j < array.length - 1; j++) {
+      for (let j = 0; j < array.length - i; j++) {
         if (array[j] > array[j + 1]) {
           array = await swapItems(array, j, j + 1);
           swapped = true;
@@ -88,24 +89,22 @@ function App() {
     setData(sorted);
   };
 
-  
-  const merge =  (left, right) => {
+  const merge = (left, right) => {
     let array = [];
     while (left.length && right.length) {
       if (left[0] < right[0]) array.push(left.shift());
       else array.push(right.shift());
-
     }
     return array.concat(left.slice().concat(right.slice()));
   };
-  const mergeSort =  (array) => {
+  const mergeSort = (array) => {
     const middle = Math.round(array.length / 2);
 
     if (array.length < 2) return array;
 
     const left = array.slice(0, middle);
     const right = array.slice(middle);
-   // await updateDataAndWait([...left, ...right]);
+    // await updateDataAndWait([...left, ...right]);
     return merge(mergeSort(left), mergeSort(right));
   };
 
@@ -142,10 +141,11 @@ function App() {
   };
 
   const swapItems = async (array, i, j) => {
-    await new Promise((r) => setTimeout(r, WAITING_TIME));
     const tempi = array[i];
     array[i] = array[j];
     array[j] = tempi;
+    if (withTimeout)
+      await updateDataAndWait([...array]);
     setData([...array]);
 
     return array;
@@ -189,7 +189,24 @@ function App() {
         </button>
       </div>
       <div>
-        <input type="number" title="Count of data" onChange={(e) =>{setDataCount(e.target.value)}} value={dataCount}/>
+        number of items:
+        <input
+          type="number"
+          title="Count of data"
+          onChange={(e) => {
+            setDataCount(e.target.value);
+          }}
+          value={dataCount}
+        />
+        sort with timeout each change:
+        <input
+          type="checkbox"
+          checked={withTimeout}
+          onChange={(e) => {
+            console.log(e.target.checked);
+            setWithTimeout(e.target.checked);
+          }}
+        />
       </div>
     </div>
   );
