@@ -109,8 +109,11 @@ function App() {
   };
 
   const updateDataAndWait = async (data) => {
-    setData([...data]);
-    await new Promise((r) => setTimeout(r, WAITING_TIME));
+    if (withTimeout){
+      setData([...data]);
+      await new Promise((r) => setTimeout(r, WAITING_TIME));
+    }
+
   };
 
   const doQuickSort = () => {
@@ -144,8 +147,8 @@ function App() {
     const tempi = array[i];
     array[i] = array[j];
     array[j] = tempi;
-    if (withTimeout)
-      await updateDataAndWait([...array]);
+    // if (withTimeout) await updateDataAndWait([...array]);
+    await updateDataAndWait([...array]);
     setData([...array]);
 
     return array;
